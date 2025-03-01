@@ -9,8 +9,14 @@ import {
 } from "react-router-dom";
 import "./index.css";
 import App from "./App.jsx";
+
 import Layout from "./components/shared/Layout";
-import Home from "./components/pages/Home";
+import UserLayout from "./components/shared/UserLayout.jsx";
+
+import Home from "./components/pages/user/home.jsx";
+import Reserve from "./components/pages/user/Reserve.jsx";
+
+import Approve from "./components/pages/Approve.jsx";
 import BookingInfo from "./components/pages/BookingInfo.jsx";
 import ManageRoom from "./components/pages/ManageRoom.jsx";
 import AddRoom from "./components/pages/AddRoom.jsx";
@@ -21,26 +27,39 @@ import Login from "./components/pages/Login";
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <UserLayout />,
+    children: [
+      { path: "/", 
+        element: <Home />,
+      },
+      { 
+        path: "/reserve",
+        element: <Reserve />,
+      },
+    ],
+  },
+  {
+    path: "/admin",
     element: <Layout />,
     children: [
       {
-        path: "/",
-        element: <Home />,
+        path: "/admin/approve",
+        element: <Approve />,
       },
       {
-        path: "/bookinginfo",
+        path: "/admin/bookinginfo",
         element: <BookingInfo />,
       },
       {
-        path: "/manageroom",
+        path: "/admin/manageroom",
         element: <ManageRoom />,
       },
       {
-        path: "/addroom",
+        path: "/admin/addroom",
         element: <AddRoom />,
       },
       {
-        path: "/dashboard",
+        path: "/admin/dashboard",
         element: <Dashboard />,
       },
     ],

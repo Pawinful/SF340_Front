@@ -12,7 +12,7 @@ const TABLE_ROWS = [
   { id: 8, room: "Meeting room 8", date: "2024-10-08", time: "13:00-17:00", topic: "Lorem ipsum dolor sit amet", status_: "รออนุมัติ", manage: "อนุมัติ" },
 ]
 
-const Home = () => {
+const Approve = () => {
   return (
     <>
       <div className='bg-[#EBEDF1] h-[92vh] flex justify-center items-center'>
@@ -62,4 +62,4 @@ const Home = () => {
   )
 }
 
-export default Home;
+export default Approve;
