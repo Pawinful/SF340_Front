@@ -15,6 +15,7 @@ import UserLayout from "./components/shared/UserLayout.jsx";
 
 import Home from "./components/pages/user/home.jsx";
 import Reserve from "./components/pages/user/Reserve.jsx";
+import MyBooking from "./components/pages/user/MyBooking.jsx";
 
 import Approve from "./components/pages/Approve.jsx";
 import BookingInfo from "./components/pages/BookingInfo.jsx";
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       { 
         path: "/reserve",
         element: <Reserve />,
+      },
+      { 
+        path: "/mybooking",
+        element: <MyBooking />,
       },
     ],
   },

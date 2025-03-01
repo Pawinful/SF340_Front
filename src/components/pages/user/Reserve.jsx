@@ -2,8 +2,8 @@ import React from "react";
 
 const Reserve = () => {
     return (
-        <div className='bg-[#EBEDF1] p-7 flex justify-center'>
-            <div className="max-w-5xl w-full p-8 rounded-xl shadow-md bg-white">
+        <div className='bg-[#EBEDF1] p-7 flex justify-center min-h-screen'>
+            <div className="max-w-4xl w-full p-8 rounded-xl shadow-md bg-white">
                 <h2 className="text-2xl font-bold text-[#A23234] text-center">Booking Meeting Room 1</h2>
                 <div className="my-6 flex justify-center">
                     <img

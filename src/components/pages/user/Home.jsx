@@ -78,8 +78,8 @@ const RoomCard = ({ room }) => {
 const Home = () => {
     return (
         <>
-            <div className='bg-[#EBEDF1]'>
-                <div className='p-7 max-w-5xl mx-auto'>
+            <div className='bg-[#EBEDF1] min-h-screen'>
+                <div className='p-6 max-w-4xl mx-auto'>
                     {rooms.map((room) => (
                         <RoomCard key={room.id} room={room} />
                     ))}
