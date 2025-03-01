@@ -5,13 +5,13 @@ const UserNav = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="w-full h-[8vh] bg-white flex items-center justify-between text-[#8A2A2B] px-6 sticky top-0 shadow-md">
+    <nav className="w-full h-[8vh] bg-[#8A2A2B] flex items-center justify-between text-white px-6 sticky top-0 shadow-md">
       <span className="text-2xl font-semibold">Meeting Room</span>
       
       <div className="hidden md:flex items-center space-x-6 text-lg ml-auto">
-        <a href="#" className="hover:text-gray-600 font-semibold">Home</a>
-        <a href="#" className="hover:text-gray-600 font-semibold">My Booking</a>
-        <FiUser className="text-2xl cursor-pointer hover:text-gray-600" />
+        <a href="#" className="hover:text-[#FED141] font-semibold">Home</a>
+        <a href="#" className="hover:text-[#FED141] font-semibold">My Booking</a>
+        <FiUser className="text-2xl cursor-pointer hover:text-[#FED141]" />
       </div>
 
       {/* Responsive */}

@@ -30,7 +30,7 @@ const rooms = [
     },
     {
         id: 3,
-        name: 'Meeting Room 3',
+        name: 'Meeting Room 4',
         location: 'Rangsit Campus',
         space: 'Faculty of Engineering, Library',
         floor: 'Fl.2',
@@ -38,7 +38,7 @@ const rooms = [
     },
     {
         id: 3,
-        name: 'Meeting Room 3',
+        name: 'Meeting Room 5',
         location: 'Rangsit Campus',
         space: 'Faculty of Engineering, Library',
         floor: 'Fl.2',
