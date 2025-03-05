@@ -22,19 +22,13 @@ function Login({}) {
         {
           UserName,
           PassWord,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true, // ใช้เมื่อ API ใช้ cookies หรือ session
         }
       );
 
       if (response.data.success) {
         setUserData(response.data.data);
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-        alert(`Welcome, ${response.data.data.displayname_en}!`);
+        localStorage.setItem("user", JSON.stringify(response.data.data[0]));
+        alert(`Welcome, ${response.data.data[0].displayNameEN}!`);
         navigate("/");
         console.log(localStorage.user);
       } else {

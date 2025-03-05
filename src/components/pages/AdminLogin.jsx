@@ -19,7 +19,10 @@ function Login({}) {
     try {
       const response = await axios.post(
         "http://localhost:3000/api/admin/login",
-        { UserName, PassWord }
+        { UserName, PassWord },
+        {
+          withCredentials: true,
+        }
       );
 
       if (response.data.success) {
