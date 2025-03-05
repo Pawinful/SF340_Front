@@ -3,9 +3,9 @@ import React from "react";
 
 const ProtectedRoutes = () => {
   // TODO: Use authentication token
-  const localStorageToken = localStorage.getItem("token");
+  const localStorageToken = localStorage.getItem("user");
 
-  return localStorageToken ? <Outlet /> : <Navigate to="/login" replace />;
+  return localStorageToken ? <div>{<Outlet />}</div> : <Navigate to="/login" replace />;
 };
 // const ProtectedRoute = ({ children }) => {
 //   const user = JSON.parse(localStorage.getItem("username"));

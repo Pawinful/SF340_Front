@@ -29,28 +29,30 @@ import ApproveBooking from "./components/pages/ApproveBooking.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <UserLayout />,
+    element: <ProtectedRoute />,
     children: [
       {
         path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/reserve",
-        element: (
-          <ProtectedRoute>
-            <Reserve />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/mybooking",
-        element: (
-          <ProtectedRoute>
-            <MyBooking />
-          </ProtectedRoute>
-        ),
-      },
+        element: <UserLayout />,
+        children: [
+          {
+            path: "/",
+            element: <Home />,
+          },
+          {
+            path: "/reserve",
+            element: (
+                <Reserve />
+            ),
+          },
+          {
+            path: "/mybooking",
+            element: (
+                <MyBooking />
+            ),
+          },
+        ]
+      }
     ],
   },
   {
@@ -106,9 +108,7 @@ const router = createBrowserRouter([
   {
     path: "/admin/login",
     element: (
-      <ProtectedRoute>
-        <AdminLogin />
-      </ProtectedRoute>
+      <AdminLogin />
     ),
   },
 ]);
