@@ -1,18 +1,20 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../shared/Layout'
+import axios from 'axios';
+import moment from 'moment';
 
-const TABLE_ROWS = [
-  { id: 1, room: "Meeting room 1", date: "2024-10-08", time: "13:00-17:00", topic: "Lorem ipsum dolor sit amet", status_: "รออนุมัติ", manage: "อนุมัติ" },
-  { id: 2, room: "Meeting room 2", date: "2024-10-08", time: "13:00-17:00", topic: "Lorem ipsum dolor sit amet", status_: "รออนุมัติ", manage: "อนุมัติ" },
-  { id: 3, room: "Meeting room 3", date: "2024-10-08", time: "13:00-17:00", topic: "Lorem ipsum dolor sit amet", status_: "รออนุมัติ", manage: "อนุมัติ" },
-  { id: 4, room: "Meeting room 4", date: "2024-10-08", time: "13:00-17:00", topic: "Lorem ipsum dolor sit amet", status_: "รออนุมัติ", manage: "อนุมัติ" },
-  { id: 5, room: "Meeting room 5", date: "2024-10-08", time: "13:00-17:00", topic: "Lorem ipsum dolor sit amet", status_: "รออนุมัติ", manage: "อนุมัติ" },
-  { id: 6, room: "Meeting room 6", date: "2024-10-08", time: "13:00-17:00", topic: "Lorem ipsum dolor sit amet", status_: "รออนุมัติ", manage: "อนุมัติ" },
-  { id: 7, room: "Meeting room 7", date: "2024-10-08", time: "13:00-17:00", topic: "Lorem ipsum dolor sit amet", status_: "รออนุมัติ", manage: "อนุมัติ" },
-  { id: 8, room: "Meeting room 8", date: "2024-10-08", time: "13:00-17:00", topic: "Lorem ipsum dolor sit amet", status_: "รออนุมัติ", manage: "อนุมัติ" },
-]
+// const TABLE_ROWS = await axios.get("http://localhost:3000/api/booking/getPendingBooking")
 
 const Approve = () => {
+  const [tables, setTable] = useState(null);
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/booking/getPendingBooking").then((response) => {
+      console.log(response.data.data);
+      setTable(response.data);
+    });
+  }, []);
+
   return (
     <>
       <div className='bg-[#EBEDF1] h-[92vh] flex justify-center items-center'>
@@ -26,7 +28,6 @@ const Approve = () => {
             <table className='w-full table-fixed'>
               <thead>
                 <tr className="border-b ">
-                  <th className="w-[10%] text-center p-4">ลำดับ</th>
                   <th className="w-[20%] text-center p-4">ห้องประชุม</th>
                   <th className="w-[15%] text-center p-4">วันที่</th>
                   <th className="w-[10%] text-center p-4">เวลา</th>
@@ -36,23 +37,22 @@ const Approve = () => {
                 </tr>
               </thead>
               <tbody>
-                {TABLE_ROWS.map(({ id, room, date, time, topic, status_, manage }, index) => (
+                {tables?.data.map((item, index) => { return (
                   <tr key={index} className='border-b border-gray-400'>
-                    <td className="text-center px-4 py-5">{id}</td>
-                    <td className="text-center px-4 py-5">{room}</td>
-                    <td className="text-center px-4 py-5">{date}</td>
-                    <td className="text-center px-4 py-5">{time}</td>
-                    <td className="text-center px-4 py-5">{topic}</td>
+                    <td className="text-center px-4 py-5">{item.roomNameEN}</td>
+                    <td className="text-center px-4 py-5">{moment(item.bookingStartTime).format("YYYY-MM-DD")}</td>
+                    <td className="text-center px-4 py-5">{moment(item.bookingStartTime).format("HH:mm") + " - " + moment(item.bookingEndTime).format("HH:mm")}</td>
+                    <td className="text-center px-4 py-5">{item.meetingName}</td>
                     <td className="px-4 py-5 flex justify-center">
                       <div className='w-20 h-9 bg-[#FED141] text-gray-800 rounded-md flex items-center justify-center text-sm '>
-                        {status_}
+                        {item.bookingStatus}
                       </div>
                     </td>
                     <td className='text-center px-4 py-5'>
-                      <button className='w-20 h-9 bg-[#3B65FB] text-white rounded-md text-sm cursor-pointer'>{manage}</button>
+                      <button className='w-20 h-9 bg-[#3B65FB] text-white rounded-md text-sm cursor-pointer' onClick={() => {}} >Approve</button>
                     </td>
                   </tr>
-                ))}
+                )})}
               </tbody>
             </table>
           </div>

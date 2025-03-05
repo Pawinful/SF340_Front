@@ -16,21 +16,21 @@ const Sidebar = () => {
       <div className='flex-1'>
         <ul>
           <Link to="/admin/approve">
-            <li className='flex items-center py-4 px-6 cursor-pointer hover:bg-[#565656]'>
+            <li className={'flex items-center py-4 px-6 cursor-pointer hover:bg-[#565656]'}>
               <IoCheckmarkCircle className='w-7 h-7 text-white' />
               <span className='text-white text-base font-bold ml-4'>อนุมัติการจอง</span>
             </li>
           </Link>
 
           <Link to="/admin/bookinginfo">
-            <li className='flex items-center py-4 px-6 cursor-pointer hover:bg-[#565656]'>
+            <li className={'flex items-center py-4 px-6 cursor-pointer hover:bg-[#565656]'}>
               <IoToday className='w-7 h-7 text-white' />
               <span className='text-white text-base font-bold ml-4'>ข้อมูลการจองทั้งหมด</span>
             </li>
           </Link>
 
           <Link to="/admin/manageroom">
-            <li className='flex items-center py-4 px-6 cursor-pointer hover:bg-[#565656]'>
+            <li className={'flex items-center py-4 px-6 cursor-pointer hover:bg-[#565656]'}>
               <IoAddCircle className='w-7 h-7 text-white' />
               <span className='text-white text-base font-bold ml-4'>จัดการห้องประชุม</span>
             </li>
@@ -45,7 +45,7 @@ const Sidebar = () => {
 
       <div className='mt-auto mb-6'>
         <ul>
-          <Link to="/admin/login">
+          <Link to="/admin/login" onClick={() => logout()}>
             <li className='flex items-center py-4 px-6 cursor-pointer hover:bg-[#565656] transition duration-200'>
               <IoLogOut className='w-7 h-7 text-white' />
               <span className='text-white text-base font-bold ml-4'>Log Out</span>
@@ -55,6 +55,10 @@ const Sidebar = () => {
       </div>
     </div>
   )
+}
+
+function logout() {
+  localStorage.removeItem("admin");
 }
 
 export default Sidebar;

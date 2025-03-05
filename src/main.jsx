@@ -24,6 +24,7 @@ import BookingInfo from "./components/pages/BookingInfo.jsx";
 import ManageRoom from "./components/pages/ManageRoom.jsx";
 import AddRoom from "./components/pages/AddRoom.jsx";
 import ApproveBooking from "./components/pages/ApproveBooking.jsx";
+import ProtectedRoutesAdmin from "./components/shared/ProtectedRouteAdmin.jsx";
 // import Dashboard from "./components/pages/Dashboard.jsx";
 
 const router = createBrowserRouter([
@@ -57,48 +58,46 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <Layout />,
+    element: <ProtectedRoutesAdmin />,
     children: [
       {
-        path: "/admin/approve",
-        element: (
-          <ProtectedRoute>
-            <Approve />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/admin/bookinginfo",
-        element: (
-          <ProtectedRoute>
-            <BookingInfo />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/admin/manageroom",
-        element: (
-          <ProtectedRoute>
-            <ManageRoom />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/admin/addroom",
-        element: (
-          <ProtectedRoute>
-            <AddRoom />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/admin/approvebooking",
-        element: <ApproveBooking />,
-      },
-      // {
-      //   path: "/admin/dashboard",
-      //   element: <Dashboard />,
-      // },
+        path: "/admin",
+        element: <Layout />,
+        children: [
+          {
+            path: "/admin/approve",
+            element: (
+                <Approve />
+            ),
+          },
+          {
+            path: "/admin/bookinginfo",
+            element: (
+                <BookingInfo />
+            ),
+          },
+          {
+            path: "/admin/manageroom",
+            element: (
+                <ManageRoom />
+            ),
+          },
+          {
+            path: "/admin/addroom",
+            element: (
+                <AddRoom />
+            ),
+          },
+          {
+            path: "/admin/approvebooking",
+            element: <ApproveBooking />,
+          },
+          // {
+          //   path: "/admin/dashboard",
+          //   element: <Dashboard />,
+          // },
+        ]
+      }
     ],
   },
   {
@@ -107,9 +106,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin/login",
-    element: (
-      <AdminLogin />
-    ),
+    element: <AdminLogin />
   },
 ]);
 
