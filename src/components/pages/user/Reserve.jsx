@@ -1,63 +1,195 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Reserve = () => {
-    return (
-        <div className='bg-[#EBEDF1] p-7 flex justify-center min-h-screen'>
-            <div className="max-w-4xl w-full p-8 rounded-xl shadow-md bg-white">
-                <h2 className="text-2xl font-bold text-[#A23234] text-center">Booking Meeting Room 1</h2>
-                <div className="my-6 flex justify-center">
-                    <img
-                        src="https://images.pexels.com/photos/416320/pexels-photo-416320.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                        alt="Room"
-                        className="w-75 rounded-lg"
-                    />
-                </div>
+  const nevigate = useNavigate();
 
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-gray-700 mb-2">ชื่อการประชุม</label>
-                        <input type="text" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A23234]" />
-                    </div>
+  const handleDoneBooking = (e) => {
+    nevigate("/mybooking");
+  };
 
-                    <div>
-                        <label className="block text-gray-700 mb-2">รายละเอียดการประชุม</label>
-                        <textarea className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A23234]" rows="3"></textarea>
-                    </div>
+  const [formData, setFormData] = useState({
+    meetingName: "",
+    meetingDescription: "",
+    customerUsername: "",
+    customerDepartment: "",
+    customerEmail: "",
+    bookingStartTime: "",
+    bookingEndTime: "",
+    roomImage: "",
+    roomNameEN: "",
+    roomNameTH: "",
+  });
 
-                    <div>
-                        <label className="block text-gray-700 mb-2">สังกัด</label>
-                        <input type="text" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A23234]" />
-                    </div>
+  useEffect(() => {
+    const selectedRoom = JSON.parse(localStorage.getItem("selectedRoom"));
+    if (selectedRoom?.roomImage) {
+      setFormData((prev) => ({
+        ...prev,
+        roomImage: selectedRoom.roomImage,
+        roomNameEN: selectedRoom.roomNameEN,
+        roomNameTH: selectedRoom.roomNameTH,
+      }));
+    }
+  }, []);
 
-                    <div>
-                        <label className="block text-gray-700 mb-2">Email</label>
-                        <input type="email" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A23234]" />
-                    </div>
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-                    <div>
-                        <label className="block text-gray-700 mb-2">วันที่</label>
-                        <input type="date" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A23234]" />
-                    </div>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-                    <div className="flex gap-4">
-                        <div className="flex-1">
-                            <label className="block text-gray-700 mb-2">เวลาเริ่มต้น</label>
-                            <input type="time" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A23234]" />
-                        </div>
+    const startDate = new Date(formData.bookingStartTime);
+    const endDate = new Date(formData.bookingEndTime);
 
-                        <div className="flex-1">
-                            <label className="block text-gray-700 mb-2">เวลาสิ้นสุด</label>
-                            <input type="time" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A23234]" />
-                        </div>
-                    </div>
-                </div>
-                <div className="flex justify-end">
-                    <button className="w-30 mt-6 bg-[#C53739] text-white py-2 rounded-md hover:bg-[#8A2A2B]">Booking</button>
-                </div>
+    const payload = {
+      meetingName: formData.meetingName,
+      meetingDescription: formData.meetingDescription,
+      customerUsername: formData.customerUsername,
+      customerDepartment: formData.customerDepartment,
+      customerEmail: formData.customerEmail,
+      bookingStartTime: startDate.toISOString(),
+      bookingEndTime: endDate.toISOString(),
+      roomNameEN: formData.roomNameEN,
+      roomNameTH: formData.roomNameTH,
+      requireApprove: true,
+    };
 
-            </div>
+    try {
+      const response = await fetch("http://localhost:3000/api/booking/book", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        alert("Booking successful!");
+      } else {
+        alert("Failed to book the room.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Error connecting to server.");
+    }
+  };
+
+  return (
+    <div className="bg-[#EBEDF1] p-7 flex justify-center min-h-screen">
+      <div className="max-w-4xl w-full p-8 rounded-xl shadow-md bg-white">
+        <h2 className="text-2xl font-bold text-[#A23234] text-center">
+          Booking {formData.roomNameEN}
+        </h2>
+
+        <div className="my-6 flex justify-center">
+          {formData.roomImage ? (
+            <img
+              src={formData.roomImage}
+              alt="Room"
+              className="w-75 rounded-lg"
+            />
+          ) : (
+            <p className="text-gray-500">ไม่มีภาพห้อง</p>
+          )}
         </div>
-    )
-}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-gray-700 mb-2">ชื่อการประชุม</label>
+            <input
+              type="text"
+              name="meetingName"
+              value={formData.meetingName}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 mb-2">
+              รายละเอียดการประชุม
+            </label>
+            <textarea
+              name="meetingDescription"
+              value={formData.meetingDescription}
+              onChange={handleChange}
+              rows="3"
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 mb-2">ชื่อผู้จอง</label>
+            <input
+              type="text"
+              name="customerUsername"
+              value={formData.customerUsername}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 mb-2">สังกัด</label>
+            <input
+              type="text"
+              name="customerDepartment"
+              value={formData.customerDepartment}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 mb-2">Email</label>
+            <input
+              type="email"
+              name="customerEmail"
+              value={formData.customerEmail}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 mb-2">
+              วันที่เริ่มต้นการประชุม
+            </label>
+            <input
+              type="datetime-local"
+              name="bookingStartTime"
+              value={formData.bookingStartTime}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 mb-2">
+              วันที่สิ้นสุดการประชุม
+            </label>
+            <input
+              type="datetime-local"
+              name="bookingEndTime"
+              value={formData.bookingEndTime}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="w-30 mt-6 bg-[#C53739] text-white py-2 rounded-md hover:bg-[#8A2A2B]"
+              onClick={handleDoneBooking}
+            >
+              Booking
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 export default Reserve;

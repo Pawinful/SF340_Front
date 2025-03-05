@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { IoMdMail } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const user = {
   name: "Catherine Yingmun",
@@ -13,9 +13,11 @@ const user = {
 const UserNav = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+
   const handleLogout = () => {
-    localStorage.clear;
-    alert("!!!");
+    localStorage.clear();
+    navigate("/login");
   };
 
   return (
@@ -61,14 +63,12 @@ const UserNav = () => {
                   <span>{user.email}</span>
                 </div>
               </div>
-              <Link to="/login">
-                <button
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 font-semibold"
-                  onSubmit={handleLogout}
-                >
-                  Sign Out
-                </button>
-              </Link>
+              <button
+                className="w-full text-left px-4 py-2 hover:bg-gray-100 font-semibold"
+                onClick={handleLogout}
+              >
+                Sign Out
+              </button>
             </div>
           )}
         </div>

@@ -4,10 +4,28 @@ import { useState, useEffect } from "react";
 import { FaMapMarkerAlt, FaHome } from "react-icons/fa";
 import { RiStairsFill } from "react-icons/ri";
 import { HiUsers } from "react-icons/hi2";
+import { useNavigate } from "react-router-dom";
 
 const baseURL = "http://localhost:3000/api/rooms/getAllRoom";
 
 const RoomCard = ({ room }) => {
+  const navigate = useNavigate();
+
+  const handleBooking = () => {
+    const token = localStorage.getItem("token");
+
+    // if (!token) {
+    //   navigate("/login");
+    //   return;
+    // }
+
+    localStorage.setItem("selectedRoom", JSON.stringify(room));
+
+    alert(`ห้อง ${room.roomNameEN} ถูกเลือกสำหรับการจอง!`);
+
+    navigate("/reserve");
+  };
+
   return (
     <div className="bg-white shadow-md rounded-lg p-6 mb-6 flex flex-col gap-4">
       {/* <h1>{post.data.seat}</h1> */}
@@ -34,7 +52,10 @@ const RoomCard = ({ room }) => {
         <div className="flex items-center gap-2 ">
           <HiUsers /> {room.seat}
         </div>
-        <button className="bg-[#C53739] text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-[#8A2A2B]">
+        <button
+          className="bg-[#C53739] text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-[#8A2A2B]"
+          onClick={handleBooking}
+        >
           จองเลย
         </button>
       </div>

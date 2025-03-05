@@ -31,7 +31,7 @@ function Login({}) {
 
         alert(`Welcome, ${userData.displayname_th}!`);
 
-        navigate("/admin/approve");
+        navigate("/admin/approvebooking");
       } else {
         setError("Login Failed! " + response.data.message);
       }
