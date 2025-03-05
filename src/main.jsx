@@ -14,10 +14,10 @@ import Layout from "./components/shared/Layout";
 import UserLayout from "./components/shared/UserLayout.jsx";
 
 import UserLogin from "./components/pages/user/UserLogin.jsx";
-import Home from "./components/pages/user/home.jsx";
+import Home from "./components/pages/user/Home.jsx";
 import Reserve from "./components/pages/user/Reserve.jsx";
 import MyBooking from "./components/pages/user/MyBooking.jsx";
-
+import ProtectedRoute from "./components/shared/Protected_Route.jsx";
 import AdminLogin from "./components/pages/AdminLogin.jsx";
 import Approve from "./components/pages/Approve.jsx";
 import BookingInfo from "./components/pages/BookingInfo.jsx";
@@ -31,16 +31,25 @@ const router = createBrowserRouter([
     path: "/",
     element: <UserLayout />,
     children: [
-      { path: "/", 
+      {
+        path: "/",
         element: <Home />,
       },
-      { 
+      {
         path: "/reserve",
-        element: <Reserve />,
+        element: (
+          <ProtectedRoute>
+            <Reserve />
+          </ProtectedRoute>
+        ),
       },
-      { 
+      {
         path: "/mybooking",
-        element: <MyBooking />,
+        element: (
+          <ProtectedRoute>
+            <MyBooking />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
@@ -50,19 +59,35 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/admin/approve",
-        element: <Approve />,
+        element: (
+          <ProtectedRoute>
+            <Approve />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/admin/bookinginfo",
-        element: <BookingInfo />,
+        element: (
+          <ProtectedRoute>
+            <BookingInfo />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/admin/manageroom",
-        element: <ManageRoom />,
+        element: (
+          <ProtectedRoute>
+            <ManageRoom />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/admin/addroom",
-        element: <AddRoom />,
+        element: (
+          <ProtectedRoute>
+            <AddRoom />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/admin/approvebooking",
@@ -80,7 +105,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin/login",
-    element: <AdminLogin />,
+    element: (
+      <ProtectedRoute>
+        <AdminLogin />
+      </ProtectedRoute>
+    ),
   },
 ]);
 

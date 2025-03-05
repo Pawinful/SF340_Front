@@ -1,92 +1,86 @@
 import React from "react";
 import logo from "../../Assets/TSE_LOGO.png";
-import { useRef, useState, useEffect } from "react";
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-function Login() {
-  const userRef = useRef();
-  const errRef = useRef();
+function Login({}) {
+  const [UserName, setUserName] = useState("");
+  const [PassWord, setPassWord] = useState("");
+  const [userData, setUserData] = useState(null);
+  const [error, setError] = useState("");
 
-  const [user, setUser] = useState("");
-  const [pwd, setPwd] = useState("");
-  const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    userRef.current.focus();
-  }, []);
-
-  useEffect(() => {
-    setErrMsg("");
-  }, [user, pwd]);
-
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(user, pwd);
-    setUser("");
-    setPwd("");
-    setSuccess(true);
+    setError("");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/user/login",
+        {
+          UserName,
+          PassWord,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // ใช้เมื่อ API ใช้ cookies หรือ session
+        }
+      );
+
+      if (response.data.success) {
+        setUserData(response.data.data);
+        localStorage.setItem("user", JSON.stringify(response.data.data));
+        alert(`Welcome, ${response.data.data.displayname_en}!`);
+        navigate("/");
+        console.log(localStorage.user);
+      } else {
+        setError("Login Failed! " + response.data.message);
+      }
+    } catch (err) {
+      setError(err.response?.data.message || err.message);
+    }
   };
 
   return (
     <>
-      {success ? (
-        <section>
-          <h1>You are logged in!</h1>
-          <br />
-          <p>
-            <a href="#">Go to home</a>
-          </p>
-        </section>
-      ) : (
-        <section
-          className="h-screen flex flex-col items-center justify-center bg-white p-6"
-          onSubmit={handleSubmit}
-        >
-          <p
-            ref={errRef}
-            className={errMsg ? "errmsg" : "offscreen"}
-            aria-live="assertive"
-          >
-            {errMsg}
-          </p>
+      <div className="h-screen flex flex-col items-center justify-center bg-white p-6">
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <div className="absolute top-1">
+          <img className="w-150" src={logo} alt="TSE Logo" />
+        </div>
 
-          <div className="absolute top-1">
-            <img className="w-150" src={logo} alt="TSE Logo" />
-          </div>
+        <div className="flex flex-col items-center mt-15">
+          <h2 className="text-4xl font-bold text-gray-800 mb-15">
+            TSE Meeting Room
+          </h2>
+          <p className="text-xl font-semibold text-gray-600 ">Sign in</p>
 
-          <div className="flex flex-col items-center mt-15">
-            <h2 className="text-4xl font-bold text-gray-800 mb-15">
-              TSE Meeting Room
-            </h2>
-            <p className="text-xl font-semibold text-gray-600 ">Sign in</p>
+          <form className="mt-10 w-96" onSubmit={handleLogin}>
+            <label className="block text-gray-700 font-medium mb-4">
+              TSE ID
+            </label>
+            <input
+              type="text"
+              className="w-full p-3.5 bg-[#EBEDF1] rounded-md  focus:outline-none"
+              value={UserName}
+              onChange={(e) => setUserName(e.target.value)}
+              required
+            />
 
-            <form className="mt-10 w-96">
-              <label className="block text-gray-700 font-medium mb-4">
-                TSE ID
-              </label>
-              <input
-                type="text"
-                className="w-full p-3.5 bg-[#EBEDF1] rounded-md  focus:outline-none"
-                id="username"
-                ref={userRef}
-                autoComplete="off"
-                onChange={(e) => setUser(e.target.value)}
-                value={user}
-                required
-              />
-
-              <label className="block text-gray-700 font-medium mt-8 mb-4">
-                Password
-              </label>
-              <input
-                type="password"
-                className="w-full p-3.5 bg-[#EBEDF1] rounded-md  focus:outline-none"
-                id="password"
-                onChange={(e) => setPwd(e.target.value)}
-                value={pwd}
-              />
-            </form>
-
+            <label className="block text-gray-700 font-medium mt-8 mb-4">
+              Password
+            </label>
+            <input
+              type="password"
+              className="w-full p-3.5 bg-[#EBEDF1] rounded-md  focus:outline-none"
+              value={PassWord}
+              onChange={(e) => setPassWord(e.target.value)}
+              required
+            />
             <div className="mt-15 text-center">
               <p className="text-sm text-gray-600 mb-2">
                 จองล่วงหน้าอย่างน้อย 1 วัน
@@ -95,9 +89,9 @@ function Login() {
                 Sign In
               </button>
             </div>
-          </div>
-        </section>
-      )}
+          </form>
+        </div>
+      </div>
     </>
   );
 }
