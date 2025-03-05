@@ -2,6 +2,10 @@ import React from 'react'
 import { FaHome, FaMapMarkerAlt } from 'react-icons/fa'
 import { HiUsers } from 'react-icons/hi2'
 
+const data = [
+    { studentId: "6510742262", confirmStatus: "Confirm", timeAdd: "0000-00-00 00:00:00" },
+]
+
 const MyBooking = () => {
     return (
         <div className='bg-[#EBEDF1] p-7 min-h-screen'>
@@ -22,7 +26,7 @@ const MyBooking = () => {
                         </div>
 
 
-                        <div className='flex items-center gap-20 '>
+                        <div className='flex justify-center items-center gap-20 '>
                             <div>
                                 <div className='font-semibold mb-3'>Start Date</div>
                                 <div className='bg-[#CECECE] px-4 py-1 rounded-md font-medium'>5 ต.ค. 2567 10:00:00</div>
@@ -34,23 +38,27 @@ const MyBooking = () => {
                         </div>
                     </div>
 
-                    <div className="">
-                        <table className="border border-gray-400 text-center">
-                            <thead>
-                                <tr className="border border-gray-400">
-                                    <th className="border border-gray-400 px-8 py-4">Student ID</th>
-                                    <th className="border border-gray-400 px-8 py-4">Confirm Status</th>
-                                    <th className="border border-gray-400 px-8 py-4">Time Add</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className="border border-gray-400">
-                                    <td className="border border-gray-400 px-8 py-4">6510742262</td>
-                                    <td className="border border-gray-400 px-8 py-4">confirm</td>
-                                    <td className="border border-gray-400 px-8 py-4">0000-00-00 00:00:00</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div className="flex justify-center">
+                        <div className="w-full max-w-123">
+                            <table className="w-full border border-gray-400 text-center">
+                                <thead className="bg-gray-300">
+                                    <tr>
+                                        <th className="border border-gray-400 px-6 py-3">Student ID</th>
+                                        <th className="border border-gray-400 px-6 py-3">Confirm Status</th>
+                                        <th className="border border-gray-400 px-6 py-3">Time Add</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white">
+                                    {data.map((item, index) => (
+                                        <tr key={index} className="border border-gray-400">
+                                            <td className="border border-gray-400 px-6 py-3">{item.studentId}</td>
+                                            <td className="border border-gray-400 px-6 py-3">{item.confirmStatus}</td>
+                                            <td className="border border-gray-400 px-6 py-3">{item.timeAdd}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
 

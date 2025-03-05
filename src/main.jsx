@@ -13,17 +13,17 @@ import App from "./App.jsx";
 import Layout from "./components/shared/Layout";
 import UserLayout from "./components/shared/UserLayout.jsx";
 
+import UserLogin from "./components/pages/user/UserLogin.jsx";
 import Home from "./components/pages/user/home.jsx";
 import Reserve from "./components/pages/user/Reserve.jsx";
 import MyBooking from "./components/pages/user/MyBooking.jsx";
 
+import AdminLogin from "./components/pages/AdminLogin.jsx";
 import Approve from "./components/pages/Approve.jsx";
 import BookingInfo from "./components/pages/BookingInfo.jsx";
 import ManageRoom from "./components/pages/ManageRoom.jsx";
 import AddRoom from "./components/pages/AddRoom.jsx";
-import Dashboard from "./components/pages/Dashboard.jsx";
-import Admin from "./components/pages/Admin";
-import Login from "./components/pages/Login";
+// import Dashboard from "./components/pages/Dashboard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -63,15 +63,19 @@ const router = createBrowserRouter([
         path: "/admin/addroom",
         element: <AddRoom />,
       },
-      {
-        path: "/admin/dashboard",
-        element: <Dashboard />,
-      },
+      // {
+      //   path: "/admin/dashboard",
+      //   element: <Dashboard />,
+      // },
     ],
   },
   {
     path: "/login",
-    element: <Login />,
+    element: <UserLogin />,
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLogin />,
   },
 ]);
 

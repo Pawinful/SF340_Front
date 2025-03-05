@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { IoMdMail } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 const user = {
     name: 'Catherine Yingmun',
@@ -15,11 +16,17 @@ const UserNav = () => {
 
     return (
         <div className="w-full h-[8vh] bg-[#8A2A2B] flex items-center justify-between text-white px-6 sticky top-0 shadow-md">
-            <span className="text-2xl font-semibold">Meeting Room</span>
+            <Link to="/" className="text-2xl font-semibold">
+                Meeting Room
+            </Link>
 
             <div className="hidden md:flex items-center space-x-8 text-lg ml-auto">
-                <a href="#" className="hover:bg-white hover:text-[#8A2A2B] px-3 py-1 rounded-sm font-semibold">Home</a>
-                <a href="#" className="hover:bg-white hover:text-[#8A2A2B] px-3 py-1 rounded-sm font-semibold">My Booking</a>
+                <Link to="/" className="hover:bg-white hover:text-[#8A2A2B] px-3 py-1 rounded-sm font-semibold">
+                    Home
+                </Link>
+                <Link to="/mybooking" className="hover:bg-white hover:text-[#8A2A2B] px-3 py-1 rounded-sm font-semibold">
+                    My Booking
+                </Link>
 
                 <div className="relative">
                     <button onClick={() => setDropdownOpen(!dropdownOpen)} className="flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none cursor-pointer">
@@ -37,7 +44,9 @@ const UserNav = () => {
                                     <span>{user.email}</span>
                                 </div>
                             </div>
-                            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 font-semibold">Sign Out</button>
+                            <Link to ="/login">
+                                <button className="w-full text-left px-4 py-2 hover:bg-gray-100 font-semibold">Sign Out</button>
+                            </Link>
                         </div>
                     )}
                 </div>
