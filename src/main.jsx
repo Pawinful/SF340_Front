@@ -23,6 +23,7 @@ import Approve from "./components/pages/Approve.jsx";
 import BookingInfo from "./components/pages/BookingInfo.jsx";
 import ManageRoom from "./components/pages/ManageRoom.jsx";
 import AddRoom from "./components/pages/AddRoom.jsx";
+import ApproveBooking from "./components/pages/ApproveBooking.jsx";
 // import Dashboard from "./components/pages/Dashboard.jsx";
 
 const router = createBrowserRouter([
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
       {
         path: "/admin/addroom",
         element: <AddRoom />,
+      },
+      {
+        path: "/admin/approvebooking",
+        element: <ApproveBooking />,
       },
       // {
       //   path: "/admin/dashboard",
