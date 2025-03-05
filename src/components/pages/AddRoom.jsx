@@ -14,7 +14,7 @@ const AddRoom = () => {
           {/* Upload Image */}
           <div className="flex flex-col ">
             <div className="bg-[#D9D9D9] w-90 h-65 "></div>
-            <button className="w-90 h-10 mt-7 text-white font-medium bg-[#3B65FB] flex items-center ">
+            <button className="w-90 h-10 mt-7 text-white font-medium bg-[#3B65FB] flex items-center cursor-pointer">
               <FaCloudUploadAlt className="bg-[#4880FF] p-2  w-10 h-10" />
               <p className="flex-1 text-center">UPLOAD</p>
             </button>
@@ -76,8 +76,8 @@ const AddRoom = () => {
 
         {/* Button */}
         <div className="flex justify-end gap-4 mt-8">
-          <button className="py-1.5 w-28 font-medium text-black bg-[#979797] rounded-md">CANCEL</button>
-          <button className="py-1.5 w-28 font-medium text-black bg-[#979797] rounded-md">SAVE</button>
+          <button className="py-1.5 w-28 font-medium text-black bg-[#979797] rounded-md cursor-pointer">CANCEL</button>
+          <button className="py-1.5 w-28 font-medium text-black bg-[#979797] rounded-md cursor-pointer">SAVE</button>
         </div>
 
 
