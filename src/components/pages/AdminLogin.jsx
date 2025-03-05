@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 function Login({}) {
   const [UserName, setUserName] = useState("");
   const [PassWord, setPassWord] = useState("");
-  const [userData, setUserData] = useState(null);
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
@@ -19,21 +18,25 @@ function Login({}) {
     try {
       const response = await axios.post(
         "http://localhost:3000/api/admin/login",
-        { UserName, PassWord },
         {
-          withCredentials: true,
+          UserName,
+          PassWord,
         }
       );
 
       if (response.data.success) {
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-        alert(`ยินดีต้อนรับ, ${response.data.data.displayname_th}`);
+        const userData = response.data.data;
+
+        localStorage.setItem("admin", JSON.stringify(userData));
+
+        alert(`Welcome, ${userData.displayname_th}!`);
+
         navigate("/admin/approve");
       } else {
-        setError("Login Failed! " + response.data.data.message);
+        setError("Login Failed! " + response.data.message);
       }
     } catch (err) {
-      setError(err.response?.data.message || err.message);
+      setError(err.response?.data.message || "เกิดข้อผิดพลาดในการล็อกอิน");
     }
   };
 
