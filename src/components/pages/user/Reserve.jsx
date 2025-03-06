@@ -39,6 +39,7 @@ const Reserve = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const userInfo = JSON.parse(localStorage.getItem("user"));
 
     const startDate = new Date(formData.bookingStartTime);
     const endDate = new Date(formData.bookingEndTime);
@@ -46,8 +47,10 @@ const Reserve = () => {
     const payload = {
       meetingName: formData.meetingName,
       meetingDescription: formData.meetingDescription,
-      customerUsername: formData.customerUsername,
-      customerDepartment: formData.customerDepartment,
+      // customerUsername: formData.customerUsername,
+      // customerDepartment: formData.customerDepartment,
+      customerUsername: userInfo.username,
+      customerDepartment: userInfo.department,
       customerEmail: formData.customerEmail,
       bookingStartTime: startDate.toISOString(),
       bookingEndTime: endDate.toISOString(),
@@ -118,7 +121,7 @@ const Reserve = () => {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-gray-700 mb-2">ชื่อผู้จอง</label>
             <input
               type="text"
@@ -138,7 +141,7 @@ const Reserve = () => {
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
             />
-          </div>
+          </div> */}
 
           <div>
             <label className="block text-gray-700 mb-2">Email</label>
