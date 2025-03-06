@@ -1,85 +1,35 @@
-import React from "react";
-
-const TABLE_ROWS = [
-  {
-    id: 1,
-    room: "Meeting room 1",
-    date: "2024-10-08",
-    time: "13:00-17:00",
-    topic: "Lorem ipsum dolor sit amet",
-    status_: "อนุมัติ",
-    manage: "แสดง",
-  },
-  {
-    id: 2,
-    room: "Meeting room 2",
-    date: "2024-10-08",
-    time: "13:00-17:00",
-    topic: "Lorem ipsum dolor sit amet",
-    status_: "ไม่อนุมัติ",
-    manage: "แสดง",
-  },
-  {
-    id: 3,
-    room: "Meeting room 3",
-    date: "2024-10-08",
-    time: "13:00-17:00",
-    topic: "Lorem ipsum dolor sit amet",
-    status_: "ยกเลิก",
-    manage: "แสดง",
-  },
-  {
-    id: 4,
-    room: "Meeting room 4",
-    date: "2024-10-08",
-    time: "13:00-17:00",
-    topic: "Lorem ipsum dolor sit amet",
-    status_: "รออนุมัติ",
-    manage: "แสดง",
-  },
-  {
-    id: 5,
-    room: "Meeting room 5",
-    date: "2024-10-08",
-    time: "13:00-17:00",
-    topic: "Lorem ipsum dolor sit amet",
-    status_: "รออนุมัติ",
-    manage: "แสดง",
-  },
-  {
-    id: 6,
-    room: "Meeting room 5",
-    date: "2024-10-08",
-    time: "13:00-17:00",
-    topic: "Lorem ipsum dolor sit amet",
-    status_: "รออนุมัติ",
-    manage: "แสดง",
-  },
-  {
-    id: 7,
-    room: "Meeting room 5",
-    date: "2024-10-08",
-    time: "13:00-17:00",
-    topic: "Lorem ipsum dolor sit amet",
-    status_: "รออนุมัติ",
-    manage: "แสดง",
-  },
-];
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
+import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 const statusColor = (status) => {
   switch (status) {
-    case "อนุมัติ":
+    case "APPROVED":
       return "#45DB54"; 
-    case "ไม่อนุมัติ":
-    case "ยกเลิก":
+    case "NOT_APPROVED":
+    case "CANCELED":
       return "#FC6A6C";
-    case "รออนุมัติ":
+    case "PENDING":
     default:
       return "#FED141"; 
   }
 };
 
 const BookingInfo = () => {
+  const navigate = useNavigate();
+  const handleManage = (item) => {
+    localStorage.setItem("selectedRoom", String(item));
+    navigate('/admin/approveBooking')
+  }
+
+  const [table, setTable] = useState(null);
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/booking/getAllBooking").then((response) => {
+      setTable(response.data);
+    });
+  }, []);
+
   return (
     <>
     <div className="bg-[#EBEDF1] h-[92vh] flex justify-center items-center">
@@ -92,33 +42,31 @@ const BookingInfo = () => {
           <table className="w-full table-fixed">
             <thead>
               <tr className="border-b">
-                <th className="w-[10%] text-center p-4">ลำดับ</th>
-                <th className="w-[20%] text-center p-4">ห้องประชุม</th>
-                <th className="w-[15%] text-center p-4">วันที่</th>
-                <th className="w-[10%] text-center p-4">เวลา</th>
-                <th className="w-[25%] text-center p-4">เรื่อง</th>
-                <th className="w-[10%] text-center p-4">สถานะ</th>
-                <th className="w-[10%] text-center p-4">จัดการ</th>
+                <th className=" text-center p-4">ห้องประชุม</th>
+                <th className=" text-center p-4">วันที่</th>
+                <th className=" text-center p-4">เวลา</th>
+                <th className=" text-center p-4">เรื่อง</th>
+                <th className=" text-center p-4">สถานะ</th>
+                <th className=" text-center p-4">จัดการ</th>
               </tr>
             </thead>
             <tbody>
-              {TABLE_ROWS.map(({ id, room, date, time, topic, status_, manage }, index) => (
+              {table?.data.map((item, index) => (
                 <tr key={index} className="border-b border-gray-400">
-                  <td className="text-center px-4 py-5">{id}</td>
-                  <td className="text-center px-4 py-5">{room}</td>
-                  <td className="text-center px-4 py-5">{date}</td>
-                  <td className="text-center px-4 py-5">{time}</td>
-                  <td className="text-center px-4 py-5">{topic}</td>
+                  <td className="text-center px-4 py-5">{item.roomNameEN}</td>
+                  <td className="text-center px-4 py-5">{moment(item.bookingStartTime).format("YYYY-MM-DD")}</td>
+                  <td className="text-center px-4 py-5">{moment(item.bookingStartTime).format("HH:MM") + " - " + moment(item.bookingEndTime).format("HH:MM")}</td>
+                  <td className="text-center px-4 py-5">{item.meetingName}</td>
                   <td className="px-4 py-5 flex justify-center">
                     <div
-                      className="w-20 h-9 text-white rounded-md flex items-center justify-center text-sm font-bold"
-                      style={{ backgroundColor: statusColor(status_) }}
+                      className="w-30 h-9 text-white rounded-md flex items-center justify-center text-sm font-bold"
+                      style={{ backgroundColor: statusColor(item.bookingStatus) }}
                     >
-                      {status_}
+                      {item.bookingStatus}
                     </div>
                   </td>
                   <td className="text-center px-4 py-5">
-                    <button className="w-20 h-9 bg-[#3B65FB] text-white rounded-md text-sm cursor-pointer">{manage}</button>
+                    <button className="w-20 h-9 bg-[#3B65FB] text-white rounded-md text-sm cursor-pointer" onClick={() => handleManage(item._id)}>Manage</button>
                   </td>
                 </tr>
               ))}

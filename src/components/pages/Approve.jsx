@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react'
 import Layout from '../shared/Layout'
 import axios from 'axios';
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 
 // const TABLE_ROWS = await axios.get("http://localhost:3000/api/booking/getPendingBooking")
 
 const Approve = () => {
   const [tables, setTable] = useState(null);
+  const admin = localStorage.getItem("admin");
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get("http://localhost:3000/api/booking/getPendingBooking").then((response) => {
@@ -14,6 +17,17 @@ const Approve = () => {
       setTable(response.data);
     });
   }, []);
+
+  const handleApprove = async (_id) => {
+    const approve = {
+        "_id": _id,
+        "approver": admin.displayname_en,
+        "bookingStatus": "APPROVED"
+    }
+
+    await axios.put("http://localhost:3000/api/booking/approveBooking", approve).then((res) => {console.log(res.data)});
+    window.location.reload();
+}
 
   return (
     <>
@@ -28,12 +42,12 @@ const Approve = () => {
             <table className='w-full table-fixed'>
               <thead>
                 <tr className="border-b ">
-                  <th className="w-[20%] text-center p-4">ห้องประชุม</th>
-                  <th className="w-[15%] text-center p-4">วันที่</th>
-                  <th className="w-[10%] text-center p-4">เวลา</th>
-                  <th className="w-[25%] text-center p-4">เรื่อง</th>
-                  <th className="w-[10%] text-center p-4">สถานะ</th>
-                  <th className="w-[10%] text-center p-4">จัดการ</th>
+                  <th className=" text-center p-4">ห้องประชุม</th>
+                  <th className=" text-center p-4">วันที่</th>
+                  <th className=" text-center p-4">เวลา</th>
+                  <th className=" text-center p-4">เรื่อง</th>
+                  <th className=" text-center p-4">สถานะ</th>
+                  <th className=" text-center p-4">จัดการ</th>
                 </tr>
               </thead>
               <tbody>
@@ -49,7 +63,7 @@ const Approve = () => {
                       </div>
                     </td>
                     <td className='text-center px-4 py-5'>
-                      <button className='w-20 h-9 bg-[#3B65FB] text-white rounded-md text-sm cursor-pointer' onClick={() => {}} >Approve</button>
+                      <button className='w-20 h-9 bg-[#3B65FB] text-white rounded-md text-sm cursor-pointer' onClick={() => handleApprove(item._id)} >Approve</button>
                     </td>
                   </tr>
                 )})}
