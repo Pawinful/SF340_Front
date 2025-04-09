@@ -13,7 +13,6 @@ const Approve = () => {
 
   useEffect(() => {
     axios.get("http://localhost:3000/api/booking/getPendingBooking").then((response) => {
-      console.log(response.data.data);
       setTable(response.data);
     });
   }, []);
@@ -26,6 +25,7 @@ const Approve = () => {
     }
 
     await axios.put("http://localhost:3000/api/booking/approveBooking", approve).then((res) => {console.log(res.data)});
+    localStorage.removeItem("selectedRoom");
     window.location.reload();
 }
 

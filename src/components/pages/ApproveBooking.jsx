@@ -24,6 +24,7 @@ const ApproveBooking = () => {
         }
 
         await axios.put("http://localhost:3000/api/booking/approveBooking", approve).then((res) => {console.log(res.data)});
+        localStorage.removeItem("selectedRoom");
         navigate("/admin/bookingInfo")
     }
 
@@ -35,6 +36,7 @@ const ApproveBooking = () => {
         }
 
         await axios.put("http://localhost:3000/api/booking/approveBooking", approve).then((res) => {console.log(res.data)});
+        localStorage.removeItem("selectedRoom");
         navigate("/admin/bookingInfo")
     }
     

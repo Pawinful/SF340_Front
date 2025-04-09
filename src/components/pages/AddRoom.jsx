@@ -1,7 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaCloudUploadAlt } from "react-icons/fa";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const AddRoom = () => {
+  const [room, setRoom] = useState(null);
+  const roomId = localStorage.getItem("selectedRoom");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get(`http://localhost:3000/api/rooms/getRoom/${roomId}`).then((response) => {
+      console.log(response.data);
+      setRoom(response.data);
+    });
+  }, []);
+
+  const handleSave = () => {
+
+  }
+
   return (
     <>
     <div className='bg-[#EBEDF1] h-[92vh] flex justify-center items-center '>
@@ -24,50 +41,44 @@ const AddRoom = () => {
           <div className="grid gap-x-10 gap-y-4 w-full">
             <div className="flex flex-col">
               <label className="font-bold pb-4">หมายเลขห้อง TH</label>
-              <input className="p-2 border" type="text" />
+              <input className="p-2 border" type="text" value={room?.data.roomNameTH} />
             </div>
 
             <div className="flex flex-col">
               <label className="font-bold pb-4">หมายเลขห้อง EN</label>
-              <input className="p-2 border" type="text" />
+              <input className="p-2 border" type="text" value={room?.data.roomNameEN} />
             </div>
 
             <div className="col-span-2 flex gap-x-10">
-              <div className="w-1/4 bg">
+              <div className="bg">
                 <label className="font-bold pb-4 block">ศูนย์</label>
-                <select className="w-full p-2 border">
-                  <option></option>
-                </select>
+                <input className="p-2 border" type="text" value={room?.data.roomNameTH} />
               </div>
               <div className="flex-grow">
                 <label className="font-bold pb-4 block">อาคาร</label>
-                <input className="w-full p-2 border" type="text" />
+                <input className="w-full p-2 border" type="text" value={room?.data.building} />
               </div>
             </div>
 
             <div className="col-span-2 flex gap-x-10">
-              <div className="w-1/4">
+              <div className="">
                 <label className="font-bold pb-4 block">จำนวนที่นั่ง</label>
-                <select className="w-full p-2 border">
-                  <option></option>
-                </select>
+                <input className="p-2 border" type="text" value={room?.data.seat} />
               </div>
               <div className="flex-grow">
                 <label className="font-bold pb-4 block">ประเภทห้อง</label>
-                <input className="w-full p-2 border" type="text" />
+                <input className="w-full p-2 border" type="text" value={room?.data.roomType} />
               </div>
             </div>
 
             <div className="col-span-2 flex gap-x-10">
-              <div className="w-1/4">
+              <div className="">
                 <label className="font-bold pb-4 block">สถานะห้อง</label>
-                <select className="w-full p-2 border">
-                  <option></option>
-                </select>
+                <input className="w-full p-2 border" type="text" value={room?.data.status == 0 ? "ปิดใช้งาน" : "เปิดใช้งาน"} />
               </div>
               <div className="flex-grow">
                 <label className="font-bold pb-4 block">เหตุผล</label>
-                <input className="w-full p-2 border" type="text" />
+                <input className="w-full p-2 border" type="text" value={room?.data.note} />
               </div>
             </div>
           </div>
@@ -76,8 +87,8 @@ const AddRoom = () => {
 
         {/* Button */}
         <div className="flex justify-end gap-4 mt-8">
-          <button className="py-1.5 w-28 font-medium text-black bg-[#979797] rounded-md cursor-pointer">CANCEL</button>
-          <button className="py-1.5 w-28 font-medium text-black bg-[#979797] rounded-md cursor-pointer">SAVE</button>
+          <button className="py-1.5 w-28 font-medium text-black bg-[#979797] rounded-md cursor-pointer" type="button" onClick={() => {}}>CANCEL</button>
+          <button className="py-1.5 w-28 font-medium text-black bg-[#979797] rounded-md cursor-pointer" type="submit">SAVE</button>
         </div>
 
 
