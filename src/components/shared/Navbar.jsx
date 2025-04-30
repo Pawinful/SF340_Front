@@ -51,15 +51,6 @@ const Navbar = () => {
               </span>
             </li>
           </Link>
-
-          <Link to="/admin/dashboard">
-            <li className="flex items-center py-4 px-6 cursor-pointer hover:bg-[#565656]">
-              <BiSolidDashboard className="w-7 h-7 text-white" />
-              <span className="text-white text-base font-bold ml-4">
-                แดชบอร์ด
-              </span>
-            </li>
-          </Link>
         </ul>
       </div>
 
