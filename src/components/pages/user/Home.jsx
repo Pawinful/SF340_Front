@@ -1,89 +1,99 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { FaMapMarkerAlt, FaHome } from "react-icons/fa";
-import { RiStairsFill } from "react-icons/ri";
-import { HiUsers } from "react-icons/hi2";
-import { useNavigate } from "react-router-dom";
+import roomImage from "../../Assets/image409.png";
 
-const baseURL = "http://localhost:3000/api/rooms/getAllRoom";
+const Home = () => {
+  const [meetingRooms, setMeetingRooms] = useState([]);
+  const [showAlert, setShowAlert] = useState(true);
 
-const RoomCard = ({ room }) => {
-  const navigate = useNavigate();
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/rooms/getAllRoom"
+        );
+        setMeetingRooms(response.data.data);
+      } catch (error) {
+        console.error("Error fetching rooms:", error);
+      }
+    };
 
-  const handleBooking = () => {
-    const token = localStorage.getItem("token");
+    fetchRooms();
+  }, []);
 
-    // if (!token) {
-    //   navigate("/login");
-    //   return;
-    // }
+  // Group ตาม branch
+  const groupedRooms = meetingRooms.reduce((acc, room) => {
+    if (!acc[room.branch]) acc[room.branch] = [];
+    acc[room.branch].push(room);
+    return acc;
+  }, {});
 
-    localStorage.setItem("selectedRoom", JSON.stringify(room));
-
-    alert(`ห้อง ${room.roomNameEN} ถูกเลือกสำหรับการจอง!`);
-
-    navigate("/reserve");
+  const handleRoomClick = (room) => {
+    localStorage.setItem("selectedRoomId", room._id);
+    localStorage.setItem("selectedRoomNameEN", room.roomNameEN);
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 mb-6 flex flex-col gap-4">
-      {/* <h1>{post.data.seat}</h1> */}
-      <div className="flex items-center gap-6">
-        <div className="bg-gray-200 p-6 rounded-lg">
-          {/* <FaHome className='text-grey-600 text-5xl' /> */}
-          <img src="" alt="" />
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold mb-2">{room.roomNameEN}</h2>
-          <p className="text-sm text-gray-500 flex items-center gap-2">
-            <FaMapMarkerAlt /> {room.branch}
-          </p>
-          <p className="text-sm text-gray-500 flex items-center gap-2">
-            <FaHome /> {room.roomType}
-          </p>
-          <p className="text-sm text-gray-500 flex items-center gap-2">
-            <RiStairsFill /> {room.building}
-          </p>
-        </div>
-      </div>
-
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2 ">
-          <HiUsers /> {room.seat}
-        </div>
-        <button
-          className="bg-[#C53739] text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-[#8A2A2B]"
-          onClick={handleBooking}
+    <div className="min-h-screen">
+      {showAlert && (
+        <div
+          className="bg-[#54585A] text-white p-3 text-center text-sm flex justify-between"
+          name="alertBar"
         >
-          จองเลย
-        </button>
+          <span>Please choose Meeting room</span>
+          <button
+            className="text-white"
+            name="closeX"
+            onClick={() => setShowAlert(false)}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* body */}
+      <div className="p-6 flex flex-col md:flex-row gap-6 max-w-8xl mx-auto">
+        {Object.entries(groupedRooms).map(([branchName, rooms], index) => (
+          <div key={index} className="relative w-full md:w-1/2">
+            {/* ชื่อศูนย์ */}
+            <div className="bg-[#8A2A2B] text-white px-6 py-4 pb-12 rounded-md text-lg font-semibold relative">
+              {index + 1}.{" "}
+              {branchName === "RANGSIT"
+                ? "Rangsit Campus"
+                : branchName === "PATTAYA"
+                ? "Pattaya Campus"
+                : branchName}
+            </div>
+
+            {/* ทุกห้องประชุม */}
+            <div
+              className="p-6 grid grid-cols-2 gap-8 relative mt-[-55px] max-[350px]:p-5 max-[350px]:gap-6"
+              name="roomBadge"
+            >
+              {rooms.map((room) => (
+                <Link
+                  to="/roominfo"
+                  key={room._id}
+                  onClick={() => handleRoomClick(room)}
+                >
+                  <div
+                    className="bg-[#A6A6A6] w-full h-36 rounded-lg shadow-md relative cursor-pointer"
+                    style={{
+                      backgroundImage: `url(/Users/pumipu/Meeting-Room-Final/meeting-room-project-front/src/components/Assets/${room.roomImage})`,
+                    }}
+                  >
+                    <span className="absolute bottom-5 left-0 w-full text-center text-sm font-semibold text-white">
+                      {room.roomNameEN}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
-  );
-};
-
-const Home = () => {
-  const [post, setPost] = useState(null);
-
-  useEffect(() => {
-    axios.get(baseURL).then((response) => {
-      setPost(response.data);
-    });
-  }, []);
-
-  if (!post) return null;
-
-  return (
-    <>
-      <div className="bg-[#EBEDF1] min-h-screen">
-        <div className="p-6 max-w-4xl mx-auto">
-          {post.data.map((room) => (
-            <RoomCard key={room.id} room={room} />
-          ))}
-        </div>
-      </div>
-    </>
   );
 };
 

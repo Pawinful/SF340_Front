@@ -13,100 +13,96 @@ import App from "./App.jsx";
 import Layout from "./components/shared/Layout";
 import UserLayout from "./components/shared/UserLayout.jsx";
 
-import UserLogin from "./components/pages/user/UserLogin.jsx";
 import Home from "./components/pages/user/Home.jsx";
-import Reserve from "./components/pages/user/Reserve.jsx";
 import MyBooking from "./components/pages/user/MyBooking.jsx";
-import ProtectedRoute from "./components/shared/Protected_Route.jsx";
-import AdminLogin from "./components/pages/AdminLogin.jsx";
+import RoomInfo from "./components/pages/user/RoomInfo.jsx";
+import Account from "./components/pages/user/Account.jsx"
+import Setting from "./components/pages/user/Setting.jsx";
+import RoomStatus from "./components/pages/user/RoomStatus.jsx";
+import Reserve from "./components/pages/user/Reserve.jsx";
+import UserLogin from "./components/pages/user/UserLogin.jsx"
+
 import Approve from "./components/pages/Approve.jsx";
 import BookingInfo from "./components/pages/BookingInfo.jsx";
 import ManageRoom from "./components/pages/ManageRoom.jsx";
 import AddRoom from "./components/pages/AddRoom.jsx";
-import ApproveBooking from "./components/pages/ApproveBooking.jsx";
-import ProtectedRoutesAdmin from "./components/shared/ProtectedRouteAdmin.jsx";
-// import Dashboard from "./components/pages/Dashboard.jsx";
+import Dashboard from "./components/pages/Dashboard.jsx";
+import Login from "./components/pages/Login";
+import ApproveBooking from "./components/pages/ApproveBooking.jsx"
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <ProtectedRoute />,
+    element: <UserLayout />,
     children: [
       {
         path: "/",
-        element: <UserLayout />,
-        children: [
-          {
-            path: "/",
-            element: <Home />,
-          },
-          {
-            path: "/reserve",
-            element: (
-                <Reserve />
-            ),
-          },
-          {
-            path: "/mybooking",
-            element: (
-                <MyBooking />
-            ),
-          },
-        ]
-      }
-    ],
+        element: <Home />,
+      },
+      {
+        path: "/mybooking",
+        element: <MyBooking />,
+      },
+      {
+        path: "/roominfo",
+        element: <RoomInfo />,
+      },
+      {
+        path: "/account",
+        element: <Account />,
+      },
+      {
+        path: "/setting",
+        element: <Setting />
+      },
+      {
+        path: "/roomstatus",
+        element: <RoomStatus />
+      },
+      {
+        path: "/reserve",
+        element: <Reserve />
+      },
+      
+    ]
   },
   {
     path: "/admin",
-    element: <ProtectedRoutesAdmin />,
+    element: <Layout />,
     children: [
       {
-        path: "/admin",
-        element: <Layout />,
-        children: [
-          {
-            path: "/admin/approve",
-            element: (
-                <Approve />
-            ),
-          },
-          {
-            path: "/admin/bookinginfo",
-            element: (
-                <BookingInfo />
-            ),
-          },
-          {
-            path: "/admin/manageroom",
-            element: (
-                <ManageRoom />
-            ),
-          },
-          {
-            path: "/admin/addroom",
-            element: (
-                <AddRoom />
-            ),
-          },
-          {
-            path: "/admin/approvebooking",
-            element: <ApproveBooking />,
-          },
-          // {
-          //   path: "/admin/dashboard",
-          //   element: <Dashboard />,
-          // },
-        ]
-      }
+        index: true,
+        element: <Approve />,
+      },
+      {
+        path: "bookinginfo",
+        element: <BookingInfo />,
+      },
+      {
+        path: "manageroom",
+        element: <ManageRoom />,
+      },
+      {
+        path: "addroom",
+        element: <AddRoom />,
+      },
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "approvebooking",
+        element: <ApproveBooking />,
+      },
     ],
+  },
+  {
+    path: "/adminlogin",
+    element: <Login />,
   },
   {
     path: "/login",
     element: <UserLogin />,
-  },
-  {
-    path: "/admin/login",
-    element: <AdminLogin />
   },
 ]);
 

@@ -1,195 +1,171 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiClock } from "react-icons/fi";
+import { PiWarning } from "react-icons/pi";
+import axios from "axios";
+import moment from "moment";
 
 const Reserve = () => {
-  const nevigate = useNavigate();
+  const navigate = useNavigate();
 
-  const handleDoneBooking = (e) => {
-    nevigate("/mybooking");
-  };
-
-  const [formData, setFormData] = useState({
-    meetingName: "",
-    meetingDescription: "",
-    customerUsername: "",
-    customerDepartment: "",
-    customerEmail: "",
-    bookingStartTime: "",
-    bookingEndTime: "",
-    roomImage: "",
-    roomNameEN: "",
-    roomNameTH: "",
-  });
+  const [userData, setUserData] = useState(null);
+  const [selectedTimes, setSelectedTimes] = useState([]);
+  const [roomData, setRoomData] = useState(null);
+  const [meetingName, setMeetingName] = useState("");
+  const [meetingInfo, setMeetingInfo] = useState("");
+  const lastTime = selectedTimes[selectedTimes.length - 1];
+  const finishedTimeRaw = moment(lastTime).add(1, "hours");
+  const finishedTime = moment(lastTime).add(1, "hours").format("HH:mm");
 
   useEffect(() => {
-    const selectedRoom = JSON.parse(localStorage.getItem("selectedRoom"));
-    if (selectedRoom?.roomImage) {
-      setFormData((prev) => ({
-        ...prev,
-        roomImage: selectedRoom.roomImage,
-        roomNameEN: selectedRoom.roomNameEN,
-        roomNameTH: selectedRoom.roomNameTH,
-      }));
+    const userDataFromStorage = localStorage.getItem("userData");
+    const timesFromStorage = localStorage.getItem("selectedTimes");
+    const roomId = localStorage.getItem("selectedRoomId");
+
+    if (roomId) {
+      axios
+        .get("http://localhost:3000/api/rooms/getRoom/" + roomId)
+        .then((res) => {
+          if (res.data.success) {
+            setRoomData(res.data.data);
+          }
+        })
+        .catch((err) => console.error("Fetch room failed:", err));
+    }
+
+    if (userDataFromStorage) {
+      setUserData(JSON.parse(userDataFromStorage));
+    }
+
+    if (timesFromStorage) {
+      setSelectedTimes(JSON.parse(timesFromStorage));
     }
   }, []);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleBooking = async () => {
+    if (!meetingName || !meetingInfo) {
+      alert("กรุณากรอกชื่อและรายละเอียดการประชุม");
+      return;
+    }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-
-    const startDate = new Date(formData.bookingStartTime);
-    const endDate = new Date(formData.bookingEndTime);
-
-    const payload = {
-      meetingName: formData.meetingName,
-      meetingDescription: formData.meetingDescription,
-      // customerUsername: formData.customerUsername,
-      // customerDepartment: formData.customerDepartment,
-      customerUsername: userInfo.username,
-      customerDepartment: userInfo.department,
-      customerEmail: formData.customerEmail,
-      bookingStartTime: startDate.toISOString(),
-      bookingEndTime: endDate.toISOString(),
-      roomNameEN: formData.roomNameEN,
-      roomNameTH: formData.roomNameTH,
+    const bookingData = {
+      meetingName: meetingName,
+      meetingDescription: meetingInfo,
+      roomNameTH: roomData.roomNameTH,
+      roomNameEN: roomData.roomNameEN,
+      customerUsername: userData.username,
+      customerDepartment: userData.department,
+      customerEmail: userData.email,
+      bookingStartTime: selectedTimes[0],
+      bookingTime: selectedTimes,
+      bookingEndTime: finishedTimeRaw,
       requireApprove: true,
     };
 
     try {
-      const response = await fetch("http://localhost:3000/api/booking/book", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        alert("Booking successful!");
+      const res = await axios.post(
+        "http://localhost:3000/api/booking/book",
+        bookingData
+      );
+      if (res.data.success) {
+        alert("จองห้องสำเร็จ!");
+        navigate("/mybooking");
       } else {
-        alert("Failed to book the room.");
+        alert("เกิดข้อผิดพลาดในการจอง");
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("Error connecting to server.");
+      console.error("Booking failed:", error);
+      alert("ไม่สามารถจองได้ กรุณาลองใหม่ภายหลัง");
     }
   };
 
+  const handleClose = () => {
+    navigate("/");
+  };
+
+  if (!roomData || !userData || selectedTimes.length === 0)
+    return <div>Loading...</div>;
+
   return (
-    <div className="bg-[#EBEDF1] p-7 flex justify-center min-h-screen">
-      <div className="max-w-4xl w-full p-8 rounded-xl shadow-md bg-white">
-        <h2 className="text-2xl font-bold text-[#A23234] text-center">
-          Booking {formData.roomNameEN}
-        </h2>
-
-        <div className="my-6 flex justify-center">
-          {formData.roomImage ? (
-            <img
-              src={formData.roomImage}
-              alt="Room"
-              className="w-75 rounded-lg"
-            />
-          ) : (
-            <p className="text-gray-500">ไม่มีภาพห้อง</p>
-          )}
+    <div className="max-w-xl mx-auto p-6">
+      {/* Header */}
+      <div className="border p-4 flex justify-between items-center">
+        <div className="text-center border-r pr-4 flex flex-col gap-2">
+          <div className="text-sm">
+            {moment(selectedTimes[0]).format("dddd")}
+          </div>
+          <div className="text-2xl font-bold">
+            {moment(selectedTimes[0]).format("D")}
+          </div>
+          <div className="text-sm">
+            {moment(selectedTimes[0]).format("MMMM")}
+          </div>
         </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 mb-2">ชื่อการประชุม</label>
-            <input
-              type="text"
-              name="meetingName"
-              value={formData.meetingName}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
-            />
+        <div className="flex-1 ml-4">
+          <h2 className="text-lg font-bold">{roomData.roomNameEN}</h2>
+          <div className="flex items-center text-sm my-2">
+            <FiClock className="mr-2" />
+            {moment(selectedTimes[0]).format("HH:mm")} - {finishedTime}
           </div>
-
-          <div>
-            <label className="block text-gray-700 mb-2">
-              รายละเอียดการประชุม
-            </label>
-            <textarea
-              name="meetingDescription"
-              value={formData.meetingDescription}
-              onChange={handleChange}
-              rows="3"
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
-            />
+          <div className="text-sm">
+            {userData.displayNameTH} {userData.username}
           </div>
+        </div>
+      </div>
 
-          {/* <div>
-            <label className="block text-gray-700 mb-2">ชื่อผู้จอง</label>
-            <input
-              type="text"
-              name="customerUsername"
-              value={formData.customerUsername}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
-            />
+      {/* Form */}
+      <div className="mt-5">
+        <div className=" font-semibold">ชื่อการประชุม</div>
+        <input
+          className="w-full border border-[#CECECE] p-2 mt-3 rounded-sm"
+          type="text"
+          name="meetingName"
+          value={meetingName}
+          onChange={(e) => setMeetingName(e.target.value)}
+        />
+
+        <div className=" font-semibold mt-4">รายละเอียดการประชุม</div>
+        <textarea
+          className="w-full border border-[#CECECE] p-2 mt-3 rounded-sm h-24"
+          name="meetingInfo"
+          value={meetingInfo}
+          onChange={(e) => setMeetingInfo(e.target.value)}
+        />
+      </div>
+
+      {/* Note */}
+      <div className="flex gap-3 items-center mt-5 p-4 bg-red-100 rounded-2xl">
+        <PiWarning className="text-[#8A2A2B] font-semibold text-5xl ml-2" />
+        <div className="flex flex-col gap-2">
+          <div className="font-bold">Note :</div>
+          <ul className="list-decimal pl-7 text-sm ">
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+          <div className="flex items-center">
+            <input type="checkbox" className="mr-2" />
+            <span className="text-sm text-[#A6A6A6]">
+              ฉันอ่านและยอมรับเงื่อนไข
+            </span>
           </div>
+        </div>
+      </div>
 
-          <div>
-            <label className="block text-gray-700 mb-2">สังกัด</label>
-            <input
-              type="text"
-              name="customerDepartment"
-              value={formData.customerDepartment}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
-            />
-          </div> */}
-
-          <div>
-            <label className="block text-gray-700 mb-2">Email</label>
-            <input
-              type="email"
-              name="customerEmail"
-              value={formData.customerEmail}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 mb-2">
-              วันที่เริ่มต้นการประชุม
-            </label>
-            <input
-              type="datetime-local"
-              name="bookingStartTime"
-              value={formData.bookingStartTime}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 mb-2">
-              วันที่สิ้นสุดการประชุม
-            </label>
-            <input
-              type="datetime-local"
-              name="bookingEndTime"
-              value={formData.bookingEndTime}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A23234]"
-            />
-          </div>
-
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="w-30 mt-6 bg-[#C53739] text-white py-2 rounded-md hover:bg-[#8A2A2B]"
-              onClick={handleDoneBooking}
-            >
-              Booking
-            </button>
-          </div>
-        </form>
+      {/* Buttons */}
+      <div className="mt-5 flex justify-end space-x-2">
+        <button
+          className="bg-[#E2E2E2] text-gray-600 px-5 py-1 rounded cursor-pointer"
+          onClick={handleClose}
+        >
+          Close
+        </button>
+        <button
+          className="bg-[#8A2A2B] text-white px-5 py-1 rounded cursor-pointer"
+          onClick={handleBooking}
+        >
+          Booking
+        </button>
       </div>
     </div>
   );

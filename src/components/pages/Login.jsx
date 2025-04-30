@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import logo from "../../Assets/TSE_LOGO.png";
+import logo from "../Assets/TSE_LOGO.png";
 
 function Login() {
   const [userName, setUserName] = useState("");
@@ -17,17 +17,17 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/user/login",
+        "http://localhost:3000/api/admin/login",
         payload
       );
 
       if (response.data.success) {
-        localStorage.setItem("userData", JSON.stringify(response.data.data[0]));
-        localStorage.setItem("token", "user");
+        localStorage.setItem("token", "admin");
+
         setMessage("Login สำเร็จ");
 
         setTimeout(() => {
-          navigate("/");
+          navigate("/admin/");
         }, 1000);
       } else {
         setMessage("ชื่อผู้ใช้หรือรหัสผ่านผิด");
@@ -59,7 +59,7 @@ function Login() {
           <div className="space-y-6">
             <div>
               <label className="block text-gray-700 font-medium mb-2">
-                TSE ID
+                Admin
               </label>
               <input
                 type="text"
@@ -84,9 +84,6 @@ function Login() {
 
           {/* Button */}
           <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600 mb-3">
-              จองล่วงหน้าอย่างน้อย 1 วัน
-            </p>
             <button
               onClick={handleLogin}
               className="w-31 bg-[#8A2A2B] text-white py-2 rounded-md text-lg font-semibold hover:bg-[#621d1e]"

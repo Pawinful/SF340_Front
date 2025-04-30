@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import UserNav from "./UserNav"; 
+import UserNav from "./UserNav";
 
 function UserLayout() {
   return (
@@ -10,7 +10,7 @@ function UserLayout() {
         <Outlet />
       </div>
     </div>
-  )
+  );
 }
 
 export default UserLayout;
