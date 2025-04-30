@@ -13,6 +13,7 @@ const Reserve = () => {
   const [roomData, setRoomData] = useState(null);
   const [meetingName, setMeetingName] = useState("");
   const [meetingInfo, setMeetingInfo] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
   const lastTime = selectedTimes[selectedTimes.length - 1];
   const finishedTimeRaw = moment(lastTime).add(1, "hours");
   const finishedTime = moment(lastTime).add(1, "hours").format("HH:mm");
@@ -45,6 +46,11 @@ const Reserve = () => {
   const handleBooking = async () => {
     if (!meetingName || !meetingInfo) {
       alert("กรุณากรอกชื่อและรายละเอียดการประชุม");
+      return;
+    }
+
+    if (!isChecked) {
+      alert("กรุณาอ่านและยอมรับเงื่อนไขการใช้ห้องประชุม");
       return;
     }
 
@@ -83,8 +89,21 @@ const Reserve = () => {
     navigate("/");
   };
 
+  const handleLoading = () => {
+    navigate("/login");
+  };
+
   if (!roomData || !userData || selectedTimes.length === 0)
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <button
+          className="bg-[#E2E2E2] text-gray-600 px-5 py-1 rounded cursor-pointer"
+          onClick={handleLoading}
+        >
+          Please Login
+        </button>
+      </div>
+    );
 
   return (
     <div className="max-w-xl mx-auto p-6">
@@ -136,15 +155,20 @@ const Reserve = () => {
       {/* Note */}
       <div className="flex gap-3 items-center mt-5 p-4 bg-red-100 rounded-2xl">
         <PiWarning className="text-[#8A2A2B] font-semibold text-5xl ml-2" />
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2" name="Note">
           <div className="font-bold">Note :</div>
-          <ul className="list-decimal pl-7 text-sm ">
-            <li></li>
-            <li></li>
-            <li></li>
+          <ul className="list-decimal pl-7 text-sm">
+            {roomData.note?.split(",").map((item, index) => (
+              <li key={index}>{item.trim()}</li>
+            ))}
           </ul>
           <div className="flex items-center">
-            <input type="checkbox" className="mr-2" />
+            <input
+              type="checkbox"
+              className="mr-2"
+              checked={isChecked}
+              onChange={(e) => setIsChecked(e.target.checked)}
+            />
             <span className="text-sm text-[#A6A6A6]">
               ฉันอ่านและยอมรับเงื่อนไข
             </span>

@@ -113,16 +113,26 @@ const BookingCalendar = ({ roomName }) => {
 
     if (!selectedDate) setSelectedDate(dateKey);
 
-    // selectedTime เก็บวันเวลาที่จอง
+    const newSelectedTimes = [...selectedTimes];
 
-    if (selectedTimes.includes(selectedDateTime)) {
-      const newSelectedTimes = selectedTimes.filter(
-        (t) => t !== selectedDateTime
-      );
-      setSelectedTimes(newSelectedTimes);
-      if (newSelectedTimes.length === 0) setSelectedDate(null);
-    } else if (selectedTimes.length < maxBookingHours) {
-      setSelectedTimes([...selectedTimes, selectedDateTime]);
+    if (newSelectedTimes.includes(selectedDateTime)) {
+      const updated = newSelectedTimes.filter((t) => t !== selectedDateTime);
+      setSelectedTimes(updated);
+      if (updated.length === 0) setSelectedDate(null);
+      return;
+    }
+
+    const sortedTimes = times.map((t) => `${dateKey} ${t}`);
+    const index = sortedTimes.indexOf(selectedDateTime);
+
+    if (newSelectedTimes.length === 0) {
+      setSelectedTimes([selectedDateTime]);
+    } else if (newSelectedTimes.length < maxBookingHours) {
+      const lastTime = newSelectedTimes[newSelectedTimes.length - 1];
+      const lastIndex = sortedTimes.indexOf(lastTime);
+      if (index === lastIndex + 1) {
+        setSelectedTimes([...newSelectedTimes, selectedDateTime]);
+      }
     }
   };
 
