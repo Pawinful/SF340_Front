@@ -29,39 +29,46 @@ import AddRoom from "./components/pages/AddRoom.jsx";
 import Login from "./components/pages/Login";
 import ApproveBooking from "./components/pages/ApproveBooking.jsx";
 import ProtectedRoutesAdmin from "./components/shared/AdminProtected_Route.jsx";
+import ProtectedRoutes from "./components/shared/Protected_Route.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <UserLayout />,
+    element: <ProtectedRoutes />,
     children: [
       {
         path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/mybooking",
-        element: <MyBooking />,
-      },
-      {
-        path: "/roominfo",
-        element: <RoomInfo />,
-      },
-      {
-        path: "/account",
-        element: <Account />,
-      },
-      {
-        path: "/setting",
-        element: <Setting />,
-      },
-      {
-        path: "/roomstatus",
-        element: <RoomStatus />,
-      },
-      {
-        path: "/reserve",
-        element: <Reserve />,
+        element: <UserLayout />,
+        children: [
+          {
+            path: "/",
+            element: <Home />,
+          },
+          {
+            path: "/mybooking",
+            element: <MyBooking />,
+          },
+          {
+            path: "/roominfo",
+            element: <RoomInfo />,
+          },
+          {
+            path: "/account",
+            element: <Account />,
+          },
+          {
+            path: "/setting",
+            element: <Setting />,
+          },
+          {
+            path: "/roomstatus",
+            element: <RoomStatus />,
+          },
+          {
+            path: "/reserve",
+            element: <Reserve />,
+          },
+        ],
       },
     ],
   },
